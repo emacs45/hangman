@@ -124,7 +124,9 @@ def hangman(chosenWord, guessedLetter, secretWordList, alreadyguessed, lifes):
     lifes (int): Anzahl Leben
 
     Rückgabe:
-    wordList (list)
+    secretWordList (list)
+    alreadyguessed (set)
+    lifes (int)
     """
 
     if guessedLetter not in alreadyguessed:
@@ -136,7 +138,7 @@ def hangman(chosenWord, guessedLetter, secretWordList, alreadyguessed, lifes):
             lifes -= 1
     else:
         print("**************************************")
-        print(f"Ouups!! You already guessed: {guessedLetter}!")
+        print(f"Ouups!! You already guessed: \"{guessedLetter}\"!")
         print("**************************************")
     alreadyguessed.add(guessedLetter)
 
