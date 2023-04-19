@@ -17,7 +17,7 @@ def print_header(word):
     print("Welcome to Hangman!")
     print(f"I think of a word, which is {len(word)} characters long")
 
-def print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWordList):
+def print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWordList, gameclose):
     """
     Überprüft, ob das Spiel gewonnen/ verloren wurde
     Zeigt, welche Buchstaben bereits (nicht) erraten sind
@@ -37,14 +37,16 @@ def print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWordLi
         print("**************************************")
         print("Congratulations! You won!!!")
         print("**************************************")
-    
-    if guessedLetter not in chosenWord:
+        gameclose = True
 
-        if lifes == 0:
-            print("You Lost!")
-            print("**************************************")      
+    if guessedLetter not in chosenWord:
+        if lifes == 0:     
             print(ascii.stufen[lifes])
             print(f"The word was \"{chosenWord}\"")
+            print("**************************************")
+            print("You Lost!")
+            print("**************************************") 
+            gameclose = True
         else:
             print(ascii.stufen[lifes])
             print("**************************************")
@@ -58,7 +60,9 @@ def print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWordLi
     print(f"Remaining letters: {secretWordList.count('_')}")
     print("**************************************")
 
-def get_input():
+    return gameclose
+
+def get_input(gameclose = False):
     """
     Erhält User-Eingabe mit RegEx
     Erlaubte Zeichen: A-Z case-insensitive + Umlaute + "-" + " "
@@ -73,12 +77,18 @@ def get_input():
 
     while not match:
 
-        guess = input("Enter a valid letter between [A-Z]: ")
+        if not gameclose:
+            userinput = input("Enter a valid letter between [A-Z]: ")
+        else:
+            print("You wish to continue?")
+            userinput = input("Please enter [Y/N]: ")
+            print("**************************************")
+
         pattern = r"^[a-zA-z,\ä\ö\ü\ß\-\ ]$"
-        match = re.search(pattern, guess)
+        match = re.search(pattern, userinput)
 
         if match:
-            return guess
+            return userinput
 
 def load_wordlist():
     """
@@ -165,5 +175,6 @@ if __name__ == "__main__":
             gameclose = print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWord, gameclose)
 
             if gameclose:
-                print("You wish to continue [Y/N]")
-                gameclose = True if get_input().lower() == "n" else False
+                gameclose = True if get_input(gameclose).lower() == "n" else False
+
+                
