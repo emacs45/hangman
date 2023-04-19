@@ -145,17 +145,25 @@ def hangman(chosenWord, guessedLetter, secretWordList, alreadyguessed, lifes):
     return secretWordList, alreadyguessed, lifes
 
 if __name__ == "__main__":
-    
-    # initialize variables     
-    alreadyguessed = set()
-    chosenWord = random.choice(load_wordlist()).lower()
-    secretWord = get_secretwordlist(chosenWord)
-    lifes = 6
 
-    print_header(chosenWord)
-    print(f"DEBUG: Das gewaehlte Wort ist {chosenWord}")
-    while "_" in secretWord and lifes > 0:
-        
-        guessedLetter = get_input().lower()
-        secretWord, alreadyguessed, lifes = hangman(chosenWord, guessedLetter, secretWord, alreadyguessed, lifes)
-        print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWord)
+    gameclose = False
+
+    while not gameclose:
+    
+        # initialize variables     
+        alreadyguessed = set()
+        chosenWord = random.choice(load_wordlist()).lower()
+        secretWord = get_secretwordlist(chosenWord)
+        lifes = 6
+        print_header(chosenWord)
+        print(f"DEBUG: Das gewaehlte Wort ist {chosenWord}")
+
+        while "_" in secretWord and lifes > 0:
+            
+            guessedLetter = get_input().lower()
+            secretWord, alreadyguessed, lifes = hangman(chosenWord, guessedLetter, secretWord, alreadyguessed, lifes)
+            gameclose = print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWord, gameclose)
+
+            if gameclose:
+                print("You wish to continue [Y/N]")
+                gameclose = True if get_input().lower() == "n" else False
