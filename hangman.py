@@ -69,26 +69,28 @@ def get_input(gameclose = False):
 
     Parameter:
     None
+    (Optional) gameclose = False
 
     Rückgabe:
-    guess (str): Ein einzelner Character zwischen A-Z, a-z, äüö, - , " " 
+    userinput (str): Ein einzelner Character zwischen A-Z, a-z, äüö, - , " "
     """
     match = False
 
     while not match:
 
         if not gameclose:
+            pattern = r"^[a-zA-Z,\ä\ö\ü\ß\-\ ]$"
             userinput = input("Enter a valid letter between [A-Z]: ")
         else:
-            print("You wish to continue?")
+            pattern = r"^[YNyn]$"
+            print("Do you want to exit Hangman?")
             userinput = input("Please enter [Y/N]: ")
             print("**************************************")
 
-        pattern = r"^[a-zA-z,\ä\ö\ü\ß\-\ ]$"
         match = re.search(pattern, userinput)
 
         if match:
-            return userinput
+            return userinput.lower()
 
 def load_wordlist():
     """
@@ -159,7 +161,7 @@ if __name__ == "__main__":
     gameclose = False
 
     while not gameclose:
-    
+
         # initialize variables     
         alreadyguessed = set()
         chosenWord = random.choice(load_wordlist()).lower()
@@ -170,11 +172,11 @@ if __name__ == "__main__":
 
         while "_" in secretWord and lifes > 0:
             
-            guessedLetter = get_input().lower()
+            guessedLetter = get_input()
             secretWord, alreadyguessed, lifes = hangman(chosenWord, guessedLetter, secretWord, alreadyguessed, lifes)
             gameclose = print_hangman(guessedLetter, chosenWord, lifes, alreadyguessed, secretWord, gameclose)
 
             if gameclose:
-                gameclose = True if get_input(gameclose).lower() == "n" else False
+                gameclose = get_input(gameclose) == "y"
 
                 
