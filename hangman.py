@@ -141,9 +141,9 @@ def hangman(chosenWord, guessedLetter, secretWordList, alreadyguessed, lifes):
 
     if guessedLetter not in alreadyguessed:
         if guessedLetter in chosenWord:
-            for i in range(len(chosenWord)):
-                if guessedLetter == chosenWord[i]:
-                    secretWordList[i] = chosenWord[i]
+            for position, letter in enumerate(chosenWord):
+                if guessedLetter == letter:
+                    secretWordList[position] = letter
         else:
             lifes -= 1
     else:
